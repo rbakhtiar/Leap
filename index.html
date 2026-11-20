@@ -1,0 +1,1610 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07130f">
+<title>Leap — Build without boundaries</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+:root {
+  font-family: 'Alegreya', serif;
+  --green: #238653;
+  --green-bright: #42b879;
+  --green-soft: #b5e8c9;
+  --radius: 9px;
+  --sidebar: 248px;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #080e0b;
+  --panel: #0d1711;
+  --panel2: #111e16;
+  --hover: #17251b;
+  --border: #203329;
+  --text: #e4eee7;
+  --muted: #91a398;
+  --subtle: #62746a;
+  --input: #09120d;
+  --shadow: 0 15px 45px #0005;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f5f7f5;
+  --panel: #ffffff;
+  --panel2: #f0f5f1;
+  --hover: #eaf3ec;
+  --border: #dce7de;
+  --text: #1b2b20;
+  --muted: #64756a;
+  --subtle: #84948a;
+  --input: #ffffff;
+  --shadow: 0 12px 35px #17351c12;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button { cursor: pointer; }
+
+a { color: inherit; text-decoration: none; }
+
+button:focus-visible, input:focus-visible,
+textarea:focus-visible, a:focus-visible {
+  outline: 2px solid var(--green-bright);
+  outline-offset: 3px;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.topbar {
+  height: 65px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+  gap: 25px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 190px;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  background: var(--green);
+  color: white;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.brand-name {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.brand-name span { color: var(--green-bright); }
+
+.search {
+  max-width: 490px;
+  width: 100%;
+  position: relative;
+}
+
+.search input {
+  width: 100%;
+  height: 36px;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text);
+  padding: 0 40px;
+  outline: none;
+}
+
+.search input:focus {
+  border-color: var(--green);
+}
+
+.search i {
+  position: absolute;
+  top: 11px;
+  left: 13px;
+  color: var(--muted);
+}
+
+.top-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  border-radius: 7px;
+}
+
+.icon-btn:hover {
+  color: var(--text);
+  background: var(--hover);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg,#1c6844,#76bb88);
+  color: white;
+  font-weight: 700;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar) minmax(0,1fr);
+  min-height: calc(100vh - 65px);
+}
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+  padding: 24px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.side-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+  color: var(--subtle);
+  padding: 0 11px 9px;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav button {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 10px 12px;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  border-radius: 7px;
+  text-align: left;
+  font-size: 16px;
+  width: 100%;
+}
+
+.nav button i {
+  width: 17px;
+  text-align: center;
+}
+
+.nav button:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.nav button.active {
+  color: var(--green-bright);
+  background: var(--hover);
+  font-weight: 700;
+  box-shadow: inset 2px 0 var(--green-bright);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel2);
+}
+
+.sidebar-bottom strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.sidebar-bottom p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.main {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 32px 38px 70px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 26px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 29px;
+  font-weight: 700;
+}
+
+.page-header p {
+  color: var(--muted);
+  margin: 3px 0 0;
+}
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 7px;
+  padding: 8px 14px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:hover { background: var(--hover); }
+
+.btn-primary {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+  font-weight: 700;
+}
+
+.btn-primary:hover {
+  background: #1b7144;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  padding: 19px;
+  border-radius: var(--radius);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.stat-number {
+  font-size: 29px;
+  font-weight: 700;
+  margin-top: 7px;
+}
+
+.stat-number i {
+  font-size: 16px;
+  color: var(--green-bright);
+  margin-right: 7px;
+}
+
+.grid-main {
+  display: grid;
+  grid-template-columns: minmax(0,1.6fr) minmax(260px,1fr);
+  gap: 18px;
+}
+
+.panel {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-header h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.panel-content { padding: 17px; }
+
+.repo {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.repo:last-child { border: 0; }
+
+.repo-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--green-bright);
+}
+
+.repo-title:hover { text-decoration: underline; }
+
+.visibility {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 1px 8px;
+  font-weight: 500;
+}
+
+.repo-description {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 6px 0 12px;
+}
+
+.repo-meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.language-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #e5b567;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.activity-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+}
+
+.activity-item:last-child { border: 0; }
+
+.activity-icon {
+  width: 31px;
+  height: 31px;
+  background: var(--hover);
+  color: var(--green-bright);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.activity-item p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.activity-item small {
+  color: var(--muted);
+}
+
+.graph-wrap {
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.graph {
+  display: grid;
+  grid-template-rows: repeat(7, 11px);
+  grid-auto-flow: column;
+  grid-auto-columns: 11px;
+  gap: 4px;
+  min-width: 650px;
+}
+
+.cell {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.cell[data-level="1"] { background: #164d32; }
+.cell[data-level="2"] { background: #247b49; }
+.cell[data-level="3"] { background: #39a665; }
+.cell[data-level="4"] { background: #76d99c; }
+
+.graph-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.graph-legend .cell {
+  width: 11px;
+  height: 11px;
+}
+
+.empty {
+  text-align: center;
+  padding: 45px 15px;
+  color: var(--muted);
+}
+
+.empty i {
+  font-size: 30px;
+  margin-bottom: 12px;
+  color: var(--subtle);
+}
+
+.empty h3 {
+  color: var(--text);
+  margin: 5px 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.toolbar input, .toolbar select {
+  height: 37px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 7px;
+  padding: 0 12px;
+}
+
+.toolbar input { flex: 1; min-width: 180px; }
+
+.repo-card {
+  border-bottom: 1px solid var(--border);
+  padding: 20px;
+}
+
+.repo-card:last-child { border: 0; }
+
+.repo-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.repo-card h3 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.repo-card h3 button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--green-bright);
+  font-weight: 700;
+}
+
+.repo-card p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 7px 0 14px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #0009;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 18px;
+}
+
+.modal-backdrop.show { display: flex; }
+
+.modal {
+  width: 100%;
+  max-width: 490px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 25px;
+}
+
+.modal h2 { margin: 0 0 6px; }
+
+.modal > p {
+  color: var(--muted);
+  margin: 0 0 22px;
+  font-size: 14px;
+}
+
+.field { margin-bottom: 17px; }
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.field input, .field textarea, .field select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text);
+  outline: none;
+}
+
+.field textarea { resize: vertical; min-height: 85px; }
+
+.field input:focus, .field textarea:focus {
+  border-color: var(--green);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.toast-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.toast {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--green-bright);
+  padding: 12px 17px;
+  border-radius: 7px;
+  box-shadow: var(--shadow);
+  animation: appear .2s ease;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-menu { display: none; }
+
+.mobile-overlay {
+  display: none;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg,#164a30,#52a875);
+  color: white;
+  font-size: 28px;
+}
+
+.profile-card h2 { margin: 0; }
+.profile-card p { margin: 3px 0; color: var(--muted); }
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  border-bottom: 1px solid var(--border);
+  gap: 15px;
+}
+
+.settings-row:last-child { border: 0; }
+
+@media(max-width:1000px) {
+  :root { --sidebar: 210px; }
+  .main { padding: 25px 22px; }
+  .stats { grid-template-columns: repeat(2,1fr); }
+  .grid-main { grid-template-columns: 1fr; }
+}
+
+@media(max-width:700px) {
+  .topbar { padding: 0 13px; gap: 12px; }
+  .brand { min-width: auto; }
+  .brand-name { font-size: 22px; }
+  .search { display: none; }
+  .mobile-menu { display: block; }
+  .layout { display: block; }
+  .sidebar {
+    position: fixed;
+    z-index: 80;
+    top: 65px;
+    bottom: 0;
+    left: -260px;
+    width: 245px;
+    transition: left .2s ease;
+    box-shadow: var(--shadow);
+  }
+  .sidebar.open { left: 0; }
+  .mobile-overlay.show {
+    display: block;
+    position: fixed;
+    inset: 65px 0 0;
+    background: #0007;
+    z-index: 70;
+  }
+  .main { padding: 24px 15px 50px; }
+  .page-header h1 { font-size: 25px; }
+  .stats { gap: 9px; }
+  .stat { padding: 13px; }
+  .stat-number { font-size: 24px; }
+  .top-actions { gap: 6px; }
+}
+
+@media(max-width:390px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .page-header { align-items: flex-start; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+  <button class="icon-btn mobile-menu" id="mobileMenu" aria-label="Open navigation">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <a class="brand" href="#" onclick="navigate('dashboard');return false">
+    <div class="logo">L</div>
+    <div class="brand-name">Leap<span>.</span></div>
+  </a>
+
+  <div class="search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input id="globalSearch" placeholder="Search repositories..." aria-label="Search repositories">
+  </div>
+
+  <div class="top-actions">
+    <button class="icon-btn" id="themeToggle" title="Toggle appearance" aria-label="Toggle appearance">
+      <i class="fa-solid fa-sun"></i>
+    </button>
+    <button class="icon-btn" onclick="showToast('Notifications are not connected yet')" aria-label="Notifications">
+      <i class="fa-regular fa-bell"></i>
+    </button>
+    <div class="avatar" title="Rahim Bakhtiar">R</div>
+  </div>
+</header>
+
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+
+  <div>
+    <div class="side-label">Workspace</div>
+    <nav class="nav">
+      <button class="active" data-page="dashboard" onclick="navigate('dashboard')">
+        <i class="fa-solid fa-house"></i> Overview
+      </button>
+      <button data-page="repositories" onclick="navigate('repositories')">
+        <i class="fa-solid fa-book"></i> Repositories
+      </button>
+      <button data-page="explore" onclick="navigate('explore')">
+        <i class="fa-regular fa-compass"></i> Explore
+      </button>
+    </nav>
+  </div>
+
+  <div>
+    <div class="side-label">Development</div>
+    <nav class="nav">
+      <button data-page="issues" onclick="navigate('issues')">
+        <i class="fa-solid fa-circle-dot"></i> Issues
+      </button>
+      <button data-page="pulls" onclick="navigate('pulls')">
+        <i class="fa-solid fa-code-pull-request"></i> Pull requests
+      </button>
+      <button data-page="activity" onclick="navigate('activity')">
+        <i class="fa-solid fa-chart-line"></i> Activity
+      </button>
+    </nav>
+  </div>
+
+  <div>
+    <div class="side-label">Account</div>
+    <nav class="nav">
+      <button data-page="profile" onclick="navigate('profile')">
+        <i class="fa-regular fa-user"></i> Profile
+      </button>
+      <button data-page="settings" onclick="navigate('settings')">
+        <i class="fa-solid fa-sliders"></i> Settings
+      </button>
+    </nav>
+  </div>
+
+  <div class="sidebar-bottom">
+    <strong>Build something great.</strong>
+    <p>Your next project starts with a repository.</p>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="openCreateModal()">
+      <i class="fa-solid fa-plus"></i> New repository
+    </button>
+  </div>
+
+</aside>
+
+<main class="main" id="main"></main>
+</div>
+</div>
+
+<div class="modal-backdrop" id="createModal">
+  <div class="modal">
+    <h2>Create a repository</h2>
+    <p>A repository is where your project lives.</p>
+
+    <form id="createForm">
+      <div class="field">
+        <label for="repoName">Repository name</label>
+        <input id="repoName" required maxlength="60" placeholder="my-awesome-project">
+      </div>
+
+      <div class="field">
+        <label for="repoDescription">Description</label>
+        <textarea id="repoDescription" maxlength="250" placeholder="What are you building?"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="repoLanguage">Primary language</label>
+        <select id="repoLanguage">
+          <option>JavaScript</option>
+          <option>TypeScript</option>
+          <option>HTML</option>
+          <option>CSS</option>
+          <option>Python</option>
+          <option>Rust</option>
+          <option>C++</option>
+          <option>C</option>
+          <option>Java</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="repoVisibility">Visibility</label>
+        <select id="repoVisibility">
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeCreateModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-plus"></i> Create repository
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script>
+/* ==========================================
+   LEAP APPLICATION CORE
+========================================== */
+
+const STORAGE_KEY = "leap.repositories.v1";
+const THEME_KEY = "leap.theme.v1";
+
+const currentUser = {
+  username: "rbakhtiar",
+  name: "Rahim Bakhtiar",
+  bio: "Developer. Builder. Creator.",
+  location: "Pakistan"
+};
+
+const seedRepositories = [
+  {
+    id: "seed-1",
+    name: "Leap",
+    description: "A new generation of Git hosting and developer collaboration.",
+    language: "JavaScript",
+    visibility: "public",
+    stars: 0,
+    created: new Date().toISOString(),
+    updated: new Date().toISOString()
+  },
+  {
+    id: "seed-2",
+    name: "GitWork",
+    description: "A modern workspace for software development teams.",
+    language: "TypeScript",
+    visibility: "public",
+    stars: 0,
+    created: new Date().toISOString(),
+    updated: new Date().toISOString()
+  },
+  {
+    id: "seed-3",
+    name: "Clamme",
+    description: "A unified workspace for documents, presentations and spreadsheets.",
+    language: "HTML",
+    visibility: "public",
+    stars: 0,
+    created: new Date().toISOString(),
+    updated: new Date().toISOString()
+  }
+];
+
+function loadRepositories() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : seedRepositories;
+  } catch {
+    return seedRepositories;
+  }
+}
+
+let repositories = loadRepositories();
+let currentPage = "dashboard";
+let selectedRepository = null;
+
+function saveRepositories() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(repositories));
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Unknown";
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+
+function showToast(message) {
+  const container = document.getElementById("toasts");
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3200);
+}
+
+/* ==========================================
+   THEME ENGINE
+========================================== */
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem(THEME_KEY, theme);
+
+  const button = document.getElementById("themeToggle");
+  button.innerHTML = theme === "dark"
+    ? '<i class="fa-solid fa-sun"></i>'
+    : '<i class="fa-solid fa-moon"></i>';
+}
+
+const savedTheme = localStorage.getItem(THEME_KEY) || "dark";
+applyTheme(savedTheme);
+
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "dark"
+    ? "light" : "dark";
+  applyTheme(next);
+});
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+function navigate(page) {
+  currentPage = page;
+  selectedRepository = null;
+
+  document.querySelectorAll(".nav button").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
+
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("mobileOverlay").classList.remove("show");
+
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("mobileMenu").addEventListener("click", () => {
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("mobileOverlay").classList.toggle("show");
+});
+
+document.getElementById("mobileOverlay").addEventListener("click", () => {
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("mobileOverlay").classList.remove("show");
+});
+
+/* ==========================================
+   REPOSITORY MANAGEMENT
+========================================== */
+
+function openCreateModal() {
+  document.getElementById("createModal").classList.add("show");
+  document.getElementById("repoName").focus();
+}
+
+function closeCreateModal() {
+  document.getElementById("createModal").classList.remove("show");
+  document.getElementById("createForm").reset();
+}
+
+document.getElementById("createModal").addEventListener("click", event => {
+  if (event.target.id === "createModal") closeCreateModal();
+});
+
+document.getElementById("createForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = document.getElementById("repoName").value.trim();
+  const description = document.getElementById("repoDescription").value.trim();
+  const language = document.getElementById("repoLanguage").value;
+  const visibility = document.getElementById("repoVisibility").value;
+
+  if (!name) return;
+
+  if (repositories.some(repo => repo.name.toLowerCase() === name.toLowerCase())) {
+    showToast("A repository with this name already exists.");
+    return;
+  }
+
+  repositories.unshift({
+    id: crypto.randomUUID(),
+    name,
+    description,
+    language,
+    visibility,
+    stars: 0,
+    created: new Date().toISOString(),
+    updated: new Date().toISOString()
+  });
+
+  saveRepositories();
+  closeCreateModal();
+  navigate("repositories");
+  showToast("Repository created successfully.");
+});
+
+function deleteRepository(id) {
+  const repo = repositories.find(item => item.id === id);
+  if (!repo) return;
+
+  if (!confirm(`Delete ${repo.name}? This cannot be undone.`)) return;
+
+  repositories = repositories.filter(item => item.id !== id);
+  saveRepositories();
+  navigate("repositories");
+  showToast("Repository deleted.");
+}
+
+function starRepository(id) {
+  const repo = repositories.find(item => item.id === id);
+  if (!repo) return;
+  repo.stars++;
+  saveRepositories();
+  render();
+  showToast("Repository starred.");
+}
+
+function openRepository(id) {
+  selectedRepository = repositories.find(item => item.id === id);
+  if (!selectedRepository) return;
+  render();
+}
+
+/* ==========================================
+   REPOSITORY COMPONENTS
+========================================== */
+
+function repositoryMeta(repo) {
+  return `
+    <div class="repo-meta">
+      <span><span class="language-dot"></span>${escapeHTML(repo.language)}</span>
+      <span><i class="fa-regular fa-star"></i> ${repo.stars || 0}</span>
+      <span>Updated ${formatDate(repo.updated)}</span>
+      <span><i class="fa-solid fa-lock"></i> ${escapeHTML(repo.visibility)}</span>
+    </div>
+  `;
+}
+
+function repositoryRow(repo) {
+  return `
+    <div class="repo">
+      <a class="repo-title" href="#repo-${escapeHTML(repo.id)}"
+         onclick="openRepository('${escapeHTML(repo.id)}');return false">
+        <i class="fa-solid fa-book"></i>
+        ${escapeHTML(repo.name)}
+        <span class="visibility">${escapeHTML(repo.visibility)}</span>
+      </a>
+      <p class="repo-description">${escapeHTML(repo.description || "No description provided.")}</p>
+      ${repositoryMeta(repo)}
+    </div>
+  `;
+}
+
+function repositoryCard(repo) {
+  return `
+    <div class="repo-card">
+      <div class="repo-card-top">
+        <h3>
+          <button onclick="openRepository('${escapeHTML(repo.id)}')">
+            <i class="fa-solid fa-book"></i>
+            ${escapeHTML(repo.name)}
+          </button>
+        </h3>
+        <span class="visibility">${escapeHTML(repo.visibility)}</span>
+      </div>
+      <p>${escapeHTML(repo.description || "No description provided.")}</p>
+      ${repositoryMeta(repo)}
+      <div style="display:flex;gap:9px;margin-top:14px">
+        <button class="btn" onclick="starRepository('${escapeHTML(repo.id)}')">
+          <i class="fa-regular fa-star"></i> Star
+        </button>
+        <button class="btn" onclick="openRepository('${escapeHTML(repo.id)}')">
+          Open repository <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+/* ==========================================
+   DASHBOARD
+========================================== */
+
+function generateGraph() {
+  let cells = "";
+  for (let i = 0; i < 182; i++) {
+    const level = Math.floor(Math.random() * 5);
+    cells += `<div class="cell" data-level="${level}"></div>`;
+  }
+  return cells;
+}
+
+function dashboardPage() {
+  const recent = repositories.slice(0, 5);
+
+  return `
+    <div class="page-header">
+      <div>
+        <h1>Overview</h1>
+        <p>Welcome back, ${escapeHTML(currentUser.name)}.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openCreateModal()">
+        <i class="fa-solid fa-plus"></i> New repository
+      </button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Repositories</div>
+        <div class="stat-number"><i class="fa-solid fa-book"></i>${repositories.length}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total stars</div>
+        <div class="stat-number"><i class="fa-regular fa-star"></i>${repositories.reduce((n,r) => n + r.stars,0)}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Public repositories</div>
+        <div class="stat-number"><i class="fa-solid fa-globe"></i>${repositories.filter(r => r.visibility === "public").length}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Private repositories</div>
+        <div class="stat-number"><i class="fa-solid fa-lock"></i>${repositories.filter(r => r.visibility === "private").length}</div>
+      </div>
+    </div>
+
+    <div class="grid-main">
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Recent repositories</h2>
+          <button class="btn" onclick="navigate('repositories')">View all</button>
+        </div>
+        <div class="panel-content">
+          ${recent.length
+            ? recent.map(repositoryRow).join("")
+            : emptyState("No repositories yet","Create your first repository to get started.")}
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Quick access</h2>
+        </div>
+        <div class="panel-content">
+          ${[
+            ["fa-book","Repositories","Browse your projects","repositories"],
+            ["fa-compass","Explore","Discover projects","explore"],
+            ["fa-circle-dot","Issues","Track development tasks","issues"],
+            ["fa-code-pull-request","Pull requests","Review proposed changes","pulls"]
+          ].map(([icon,title,desc,page]) => `
+            <div class="activity-item">
+              <div class="activity-icon"><i class="fa-solid ${icon}"></i></div>
+              <div>
+                <p><strong>${title}</strong></p>
+                <small>${desc}</small>
+                <div><button class="btn" style="margin-top:7px" onclick="navigate('${page}')">Open</button></div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+    </div>
+
+    <section class="panel" style="margin-top:19px">
+      <div class="panel-header">
+        <h2>Contribution activity</h2>
+        <span style="color:var(--muted);font-size:13px">Preview</span>
+      </div>
+      <div class="panel-content">
+        <div class="graph-wrap">
+          <div class="graph">${generateGraph()}</div>
+        </div>
+        <div class="graph-legend">
+          Less
+          <span class="cell"></span>
+          <span class="cell" data-level="1"></span>
+          <span class="cell" data-level="2"></span>
+          <span class="cell" data-level="3"></span>
+          <span class="cell" data-level="4"></span>
+          More
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:0">
+          Sample visualization. Real contribution data requires a connected Git service.
+        </p>
+      </div>
+    </section>
+  `;
+}
+
+/* ==========================================
+   REPOSITORIES PAGE
+========================================== */
+
+function repositoriesPage() {
+  return `
+    <div class="page-header">
+      <div>
+        <h1>Repositories</h1>
+        <p>Manage your projects and source code.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openCreateModal()">
+        <i class="fa-solid fa-plus"></i> New
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <input id="repoSearch" placeholder="Find a repository..." aria-label="Find a repository">
+      <select id="repoFilter" aria-label="Filter repositories">
+        <option value="all">All repositories</option>
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
+      <select id="repoSort" aria-label="Sort repositories">
+        <option value="updated">Recently updated</option>
+        <option value="name">Name</option>
+        <option value="stars">Most stars</option>
+      </select>
+    </div>
+
+    <section class="panel">
+      <div id="repositoryList">
+        ${repositories.map(repositoryCard).join("") || emptyState("No repositories","Create a repository to get started.")}
+      </div>
+    </section>
+  `;
+}
+
+function filterRepositories() {
+  const search = (document.getElementById("repoSearch")?.value || "").toLowerCase();
+  const filter = document.getElementById("repoFilter")?.value || "all";
+  const sort = document.getElementById("repoSort")?.value || "updated";
+
+  let results = repositories.filter(repo => {
+    const matches = repo.name.toLowerCase().includes(search) ||
+      repo.description.toLowerCase().includes(search);
+    const visibility = filter === "all" || repo.visibility === filter;
+    return matches && visibility;
+  });
+
+  if (sort === "name") results.sort((a,b) => a.name.localeCompare(b.name));
+  if (sort === "stars") results.sort((a,b) => b.stars-a.stars);
+  if (sort === "updated") results.sort((a,b) => new Date(b.updated)-new Date(a.updated));
+
+  document.getElementById("repositoryList").innerHTML =
+    results.map(repositoryCard).join("") ||
+    emptyState("No matching repositories","Try a different search or filter.");
+}
+
+function setupRepositoryFilters() {
+  ["repoSearch","repoFilter","repoSort"].forEach(id => {
+    const element = document.getElementById(id);
+    if (!element) return;
+    element.addEventListener(id === "repoSearch" ? "input" : "change", filterRepositories);
+  });
+}
+
+/* ==========================================
+   EXPLORE
+========================================== */
+
+function explorePage() {
+  const publicRepos = repositories.filter(repo => repo.visibility === "public");
+
+  return `
+    <div class="page-header">
+      <div>
+        <h1>Explore</h1>
+        <p>Discover projects in your workspace.</p>
+      </div>
+    </div>
+    <section class="panel">
+      <div class="panel-header"><h2>Public repositories</h2></div>
+      <div id="exploreList">
+        ${publicRepos.map(repositoryCard).join("") ||
+          emptyState("Nothing to explore","Public repositories will appear here.")}
+      </div>
+    </section>
+    <p style="color:var(--muted);font-size:13px;margin-top:15px">
+      This page currently displays local public repositories, not a global network.
+    </p>
+  `;
+}
+
+/* ==========================================
+   PLACEHOLDER SECTIONS
+========================================== */
+
+function emptyState(title,description) {
+  return `
+    <div class="empty">
+      <i class="fa-regular fa-folder-open"></i>
+      <h3>${escapeHTML(title)}</h3>
+      <p>${escapeHTML(description)}</p>
+    </div>
+  `;
+}
+
+function issuesPage() {
+  return `
+    <div class="page-header">
+      <div><h1>Issues</h1><p>Track bugs, tasks and improvements.</p></div>
+      <button class="btn btn-primary" onclick="showToast('Issue management requires a backend.')">
+        <i class="fa-solid fa-plus"></i> New issue
+      </button>
+    </div>
+    <section class="panel">
+      ${emptyState("No issues yet","Your connected issue tracker will appear here.")}
+    </section>
+  `;
+}
+
+function pullsPage() {
+  return `
+    <div class="page-header">
+      <div><h1>Pull requests</h1><p>Review and merge proposed changes.</p></div>
+      <button class="btn" onclick="showToast('Pull request creation requires Git integration.')">
+        <i class="fa-solid fa-code-pull-request"></i> New pull request
+      </button>
+    </div>
+    <section class="panel">
+      ${emptyState("No pull requests","Connect a Git backend to manage pull requests.")}
+    </section>
+  `;
+}
+
+function activityPage() {
+  return `
+    <div class="page-header">
+      <div><h1>Activity</h1><p>Your development timeline.</p></div>
+    </div>
+    <section class="panel">
+      <div class="panel-content">
+        ${repositories.map(repo => `
+          <div class="activity-item">
+            <div class="activity-icon"><i class="fa-solid fa-book"></i></div>
+            <div>
+              <p>Created repository <strong>${escapeHTML(repo.name)}</strong></p>
+              <small>${formatDate(repo.created)}</small>
+            </div>
+          </div>
+        `).join("") || emptyState("No activity","Your project activity will appear here.")}
+      </div>
+    </section>
+  `;
+}
+
+function profilePage() {
+  return `
+    <div class="page-header"><div><h1>Profile</h1><p>Your developer identity.</p></div></div>
+    <section class="panel">
+      <div class="profile-card">
+        <div class="profile-avatar">R</div>
+        <div>
+          <h2>${escapeHTML(currentUser.name)}</h2>
+          <p>@${escapeHTML(currentUser.username)}</p>
+          <p>${escapeHTML(currentUser.bio)}</p>
+          <small style="color:var(--muted)">${escapeHTML(currentUser.location)}</small>
+        </div>
+      </div>
+      <div class="panel-content">
+        <strong>${repositories.length} repositories</strong>
+        <p style="color:var(--muted)">Your Leap developer profile.</p>
+      </div>
+    </section>
+  `;
+}
+
+function settingsPage() {
+  return `
+    <div class="page-header"><div><h1>Settings</h1><p>Customize your Leap experience.</p></div></div>
+    <section class="panel">
+      <div class="settings-row">
+        <div><strong>Appearance</strong><br><small style="color:var(--muted)">Choose your interface theme.</small></div>
+        <button class="btn" onclick="applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light':'dark')">Toggle theme</button>
+      </div>
+      <div class="settings-row">
+        <div><strong>Export repositories</strong><br><small style="color:var(--muted)">Download a JSON backup of local data.</small></div>
+        <button class="btn" onclick="exportData()">Export JSON</button>
+      </div>
+      <div class="settings-row">
+        <div><strong>Reset application</strong><br><small style="color:var(--muted)">Restore the initial demonstration data.</small></div>
+        <button class="btn" onclick="resetData()">Reset</button>
+      </div>
+      <div class="settings-row">
+        <div><strong>Application</strong><br><small style="color:var(--muted)">Leap frontend prototype · Version 1.0</small></div>
+      </div>
+    </section>
+  `;
+}
+
+/* ==========================================
+   INDIVIDUAL REPOSITORY
+========================================== */
+
+function repositoryDetailPage(repo) {
+  return `
+    <div class="page-header">
+      <div>
+        <p style="color:var(--muted);margin:0 0 7px">
+          <a href="#" onclick="navigate('repositories');return false">Repositories</a> /
+          ${escapeHTML(repo.name)}
+        </p>
+        <h1>${escapeHTML(repo.name)}</h1>
+        <p>${escapeHTML(repo.description || "No description provided.")}</p>
+      </div>
+      <button class="btn" onclick="deleteRepository('${escapeHTML(repo.id)}')">
+        <i class="fa-regular fa-trash-can"></i> Delete
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <span class="visibility">${escapeHTML(repo.visibility)}</span>
+      ${repositoryMeta(repo)}
+    </div>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2><i class="fa-solid fa-code"></i> Code</h2>
+        <button class="btn" onclick="showToast('Remote Git operations are not connected.')">
+          <i class="fa-solid fa-code-branch"></i> Branches
+        </button>
+      </div>
+      <div class="panel-content">
+        <div class="activity-item">
+          <div class="activity-icon"><i class="fa-solid fa-folder"></i></div>
+          <div>
+            <strong>${escapeHTML(repo.name)}</strong>
+            <p><small>Repository workspace</small></p>
+          </div>
+        </div>
+        <div class="empty">
+          <i class="fa-regular fa-file-code"></i>
+          <h3>No files yet</h3>
+          <p>Connect a Git backend to add and manage source files.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" style="margin-top:18px">
+      <div class="panel-header"><h2>README.md</h2></div>
+      <div class="panel-content">
+        <h2>${escapeHTML(repo.name)}</h2>
+        <p>${escapeHTML(repo.description || "Welcome to this repository.")}</p>
+        <p style="color:var(--muted)">This is a local repository preview. Remote file storage is not configured.</p>
+      </div>
+    </section>
+  `;
+}
+
+/* ==========================================
+   GLOBAL SEARCH
+========================================== */
+
+document.getElementById("globalSearch").addEventListener("input", event => {
+  const query = event.target.value.trim();
+  if (query) {
+    navigate("repositories");
+    const search = document.getElementById("repoSearch");
+    if (search) {
+      search.value = query;
+      filterRepositories();
+    }
+    event.target.value = query;
+  }
+});
+
+/* ==========================================
+   DATA EXPORT
+========================================== */
+
+function exportData() {
+  const blob = new Blob(
+    [JSON.stringify(repositories,null,2)],
+    {type:"application/json"}
+  );
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = "leap-repositories.json";
+  anchor.click();
+  URL.revokeObjectURL(url);
+  showToast("Repository data exported.");
+}
+
+function resetData() {
+  if (!confirm("Reset all local repository data?")) return;
+  repositories = seedRepositories.map(repo => ({...repo}));
+  saveRepositories();
+  navigate("dashboard");
+  showToast("Application data reset.");
+}
+
+/* ==========================================
+   MAIN RENDERER
+========================================== */
+
+function render() {
+  const main = document.getElementById("main");
+
+  if (selectedRepository) {
+    main.innerHTML = repositoryDetailPage(selectedRepository);
+    return;
+  }
+
+  const pages = {
+    dashboard: dashboardPage,
+    repositories: repositoriesPage,
+    explore: explorePage,
+    issues: issuesPage,
+    pulls: pullsPage,
+    activity: activityPage,
+    profile: profilePage,
+    settings: settingsPage
+  };
+
+  main.innerHTML = (pages[currentPage] || dashboardPage)();
+
+  if (currentPage === "repositories") {
+    setupRepositoryFilters();
+  }
+}
+
+/* ==========================================
+   INITIALIZATION
+========================================== */
+
+render();
+
+console.log(
+  "%cLEAP",
+  "font-size:30px;font-weight:bold;color:#42b879"
+);
+console.log("Leap frontend initialized.");
+</script>
+</body>
+</html>
