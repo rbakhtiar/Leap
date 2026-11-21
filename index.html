@@ -1,454 +1,1369 @@
+
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#071b16">
-  <meta name="description" content="Leap — A home for your code.">
-  <title>Leap — Developer Platform</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07100c">
+<title>Leap — Build Beyond</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Alegreya:wght@400;500;600;700&display=swap');
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="styles.css">
+:root{
+ --bg:#080d0a;
+ --surface:#0e1711;
+ --surface2:#131f17;
+ --surface3:#19271e;
+ --border:#26392c;
+ --text:#e6eee8;
+ --muted:#84958a;
+ --green:#35d68b;
+ --green-dark:#14794c;
+ --red:#f07178;
+ --blue:#70aaff;
+ --gold:#d6b56e;
+ --shadow:0 15px 50px #0006;
+ --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:13px Inter,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+a{color:inherit;text-decoration:none}
+.app{min-height:100vh}
+.topbar{
+ height:62px;position:sticky;top:0;z-index:30;
+ display:flex;align-items:center;padding:0 20px;gap:20px;
+ background:#080d0af2;backdrop-filter:blur(18px);
+ border-bottom:1px solid var(--border)
+}
+.logo{font-size:23px;font-weight:800;letter-spacing:-1.4px;white-space:nowrap}
+.logo em{font-style:normal;color:var(--green)}
+.logo-icon{
+ display:inline-grid;place-items:center;background:var(--green);
+ color:#07100c;width:29px;height:29px;border-radius:9px;margin-right:7px
+}
+.search-wrap{position:relative;width:min(410px,40vw)}
+.search{
+ display:flex;align-items:center;gap:10px;padding:9px 12px;
+ background:var(--surface);border:1px solid var(--border);border-radius:8px
+}
+.search input{background:none;border:0;outline:0;color:var(--text);width:100%}
+.search-results{
+ display:none;position:absolute;top:44px;left:0;right:0;
+ max-height:350px;overflow:auto;background:var(--surface);
+ border:1px solid var(--border);border-radius:10px;padding:6px;z-index:50
+}
+.search-results.show{display:block}
+.search-item{padding:11px;border-radius:7px;cursor:pointer}
+.search-item:hover{background:var(--surface3)}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.icon-button{
+ background:var(--surface);color:var(--text);
+ border:1px solid var(--border);padding:9px 11px;border-radius:8px
+}
+.avatar{
+ width:32px;height:32px;border-radius:50%;background:#17613e;
+ display:grid;place-items:center;font-weight:800
+}
+.layout{display:flex;min-height:calc(100vh - 62px)}
+.sidebar{
+ width:238px;flex-shrink:0;border-right:1px solid var(--border);
+ padding:19px 12px;display:flex;flex-direction:column
+}
+.side-heading{
+ padding:13px 10px 7px;font-size:10px;letter-spacing:1.2px;
+ font-weight:700;color:var(--muted)
+}
+.nav{
+ padding:10px;border-radius:8px;display:flex;align-items:center;
+ gap:12px;color:var(--muted);cursor:pointer;margin:2px 0;
+ transition:.15s
+}
+.nav:hover,.nav.active{background:var(--surface3);color:var(--text)}
+.nav.active{color:var(--green)}
+.nav-icon{width:19px;text-align:center;font-size:15px}
+.nav-count{margin-left:auto;font-size:10px}
+.sidebar-footer{margin-top:auto;border-top:1px solid var(--border);padding-top:15px}
+.main{flex:1;min-width:0;padding:32px clamp(16px,4vw,55px)}
+.content{max-width:1250px;margin:auto}
+.heading{
+ display:flex;justify-content:space-between;align-items:center;
+ flex-wrap:wrap;gap:14px;margin-bottom:24px
+}
+h1{font-size:26px;letter-spacing:-1px;margin:0 0 6px}
+h2{font-size:16px;margin:0}
+h3{font-size:13px;margin:0}
+.sub{color:var(--muted);font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+ border:1px solid var(--border);background:var(--surface2);
+ color:var(--text);border-radius:8px;padding:9px 13px;font-weight:600;
+ transition:.15s
+}
+.btn:hover{border-color:var(--green)}
+.btn.primary{background:var(--green);color:#06130b;border-color:var(--green)}
+.btn.danger{color:var(--red)}
+.btn.small{font-size:11px;padding:6px 9px}
+.card{
+ background:var(--surface);border:1px solid var(--border);
+ border-radius:var(--radius);padding:18px;min-width:0
+}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.grid{display:grid;gap:14px}
+.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px}
+.stat-label{font-size:11px;color:var(--muted)}
+.stat-value{font-size:28px;font-weight:800;margin-top:12px;letter-spacing:-1px}
+.stat-detail{font-size:10px;color:var(--green);margin-top:5px}
+.columns{grid-template-columns:minmax(0,1.5fr) minmax(250px,1fr)}
+.repo{padding:15px 0;border-bottom:1px solid var(--border)}
+.repo:last-child{border:0}
+.repo-title{color:var(--green);font-weight:700;font-size:13px}
+.repo-desc{font-size:11px;color:var(--muted);margin:7px 0 11px}
+.repo-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:10px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px}
+.badge{
+ display:inline-flex;border:1px solid var(--border);
+ border-radius:20px;padding:4px 8px;color:var(--muted);font-size:10px
+}
+.row{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:13px 0;border-bottom:1px solid var(--border)
+}
+.row:last-child{border:0}
+.row-main{min-width:0}
+.row-title{font-weight:600;overflow-wrap:anywhere}
+.row-sub{font-size:10px;color:var(--muted);margin-top:5px}
+.activity{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity:last-child{border:0}
+.activity-icon{
+ width:30px;height:30px;display:grid;place-items:center;
+ background:var(--surface3);border-radius:8px;flex-shrink:0
+}
+.activity-text{font-size:11px;line-height:1.6}
+.graph{display:grid;grid-template-columns:repeat(26,1fr);gap:4px}
+.graph-cell{aspect-ratio:1;background:#17241b;border-radius:3px}
+.graph-cell[data-level="1"]{background:#155d3b}
+.graph-cell[data-level="2"]{background:#16844f}
+.graph-cell[data-level="3"]{background:#20b66b}
+.graph-cell[data-level="4"]{background:#43e38e}
+.tabs{display:flex;gap:22px;overflow:auto;border-bottom:1px solid var(--border);margin-bottom:18px}
+.tab{padding:12px 2px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab.active{color:var(--green);border-bottom:2px solid var(--green)}
+.field{margin-bottom:15px}
+.field label{display:block;color:var(--muted);font-size:11px;margin-bottom:7px}
+.field input,.field textarea,.field select{
+ width:100%;background:var(--bg);border:1px solid var(--border);
+ color:var(--text);padding:11px;border-radius:8px
+}
+.field textarea{min-height:100px;resize:vertical}
+.empty{text-align:center;padding:45px 15px;color:var(--muted)}
+.empty-icon{font-size:30px;margin-bottom:12px}
+.overlay{
+ display:none;position:fixed;inset:0;z-index:70;background:#000a;
+ align-items:center;justify-content:center;padding:15px
+}
+.overlay.show{display:flex}
+.modal{
+ width:min(530px,100%);max-height:90vh;overflow:auto;
+ padding:23px;background:var(--surface);
+ border:1px solid var(--border);border-radius:15px;box-shadow:var(--shadow)
+}
+.modal h2{margin-bottom:20px}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+.toast{
+ position:fixed;right:20px;bottom:20px;z-index:100;
+ background:var(--surface3);border:1px solid var(--green);
+ padding:13px 17px;border-radius:9px;display:none
+}
+.toast.show{display:block}
+pre,code{font-family:"DM Mono",monospace}
+pre{
+ background:#050907;border:1px solid var(--border);border-radius:8px;
+ padding:15px;overflow:auto;color:#a6e5bd;font-size:11px;line-height:1.7
+}
+.editor{
+ width:100%;min-height:350px;resize:vertical;
+ background:#050907;color:#b5e9c5;border:1px solid var(--border);
+ padding:17px;border-radius:8px;font:12px/1.8 "DM Mono",monospace;
+ tab-size:2
+}
+.file-row{display:flex;gap:10px;padding:11px;border-bottom:1px solid var(--border);cursor:pointer}
+.file-row:hover{background:var(--surface2)}
+.split{display:grid;grid-template-columns:220px minmax(0,1fr);gap:12px}
+.pill{color:var(--green);font-size:10px}
+.progress{height:5px;background:var(--surface3);border-radius:9px;overflow:hidden}
+.progress span{display:block;height:100%;background:var(--green)}
+@media(max-width:900px){
+ .sidebar{width:65px;padding:15px 7px}
+ .side-heading,.nav-label,.nav-count,.sidebar-footer{display:none}
+ .nav{justify-content:center;padding:13px 5px}
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .columns{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+ .sidebar{display:none}
+ .topbar{padding:0 10px;gap:9px}
+ .logo{font-size:18px}
+ .search-wrap{width:auto;flex:1}
+ .main{padding:22px 13px}
+ .stats{gap:8px}
+ .card{padding:14px}
+ .split{grid-template-columns:1fr}
+}
+</style>
 </head>
+
 <body>
-  <div class="app-shell">
-
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="icon-button mobile-menu" id="mobileMenu" aria-label="Open navigation">
-          <span class="menu-lines"></span>
-        </button>
-
-        <a class="brand" href="#" data-page="dashboard">
-          <span class="brand-mark">L</span>
-          <span class="brand-name">leap</span>
-          <span class="brand-version">DEVELOPER PLATFORM</span>
-        </a>
-      </div>
-
-      <div class="topbar-search">
-        <span class="search-symbol">⌕</span>
-        <input id="globalSearch" type="search" placeholder="Search repositories, issues, users..." autocomplete="off">
-        <kbd>/</kbd>
-        <div class="search-results hidden" id="searchResults"></div>
-      </div>
-
-      <div class="topbar-actions">
-        <button class="icon-button" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
-          <span id="themeIcon">◐</span>
-        </button>
-
-        <button class="icon-button notification-button" data-page="notifications" title="Notifications">
-          <span>♧</span>
-          <i class="notification-dot"></i>
-        </button>
-
-        <button class="create-button" id="createButton">
-          <span>+</span>
-          <span>Create</span>
-        </button>
-
-        <button class="avatar avatar-small" id="profileButton" title="Your profile">R</button>
-      </div>
-    </header>
-
-    <div class="workspace">
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-profile">
-          <div class="avatar avatar-large">R</div>
-          <div class="sidebar-user">
-            <strong>rbakhtiar</strong>
-            <span>Developer account</span>
-          </div>
-          <button class="more-button" aria-label="More options">···</button>
-        </div>
-
-        <div class="sidebar-section">
-          <span class="sidebar-heading">WORKSPACE</span>
-          <button class="nav-item active" data-page="dashboard">
-            <span class="nav-icon">⌂</span> Overview
-          </button>
-          <button class="nav-item" data-page="repositories">
-            <span class="nav-icon">▤</span> Repositories
-            <span class="nav-count" id="repoCount">0</span>
-          </button>
-          <button class="nav-item" data-page="activity">
-            <span class="nav-icon">◷</span> Activity
-          </button>
-          <button class="nav-item" data-page="explore">
-            <span class="nav-icon">⌕</span> Explore
-          </button>
-        </div>
-
-        <div class="sidebar-section">
-          <span class="sidebar-heading">COLLABORATE</span>
-          <button class="nav-item" data-page="issues">
-            <span class="nav-icon">◎</span> Issues
-            <span class="nav-count" id="issueCount">0</span>
-          </button>
-          <button class="nav-item" data-page="pulls">
-            <span class="nav-icon">⇄</span> Pull requests
-            <span class="nav-count" id="pullCount">0</span>
-          </button>
-          <button class="nav-item" data-page="discussions">
-            <span class="nav-icon">▤</span> Discussions
-          </button>
-          <button class="nav-item" data-page="notifications">
-            <span class="nav-icon">♧</span> Notifications
-          </button>
-        </div>
-
-        <div class="sidebar-section">
-          <span class="sidebar-heading">PERSONAL</span>
-          <button class="nav-item" data-page="profile">
-            <span class="nav-icon">◉</span> Profile
-          </button>
-          <button class="nav-item" data-page="settings">
-            <span class="nav-icon">⚙</span> Settings
-          </button>
-        </div>
-
-        <div class="sidebar-bottom">
-          <div class="sidebar-promo">
-            <div class="promo-label">LEAP PLATFORM</div>
-            <strong>Build without boundaries.</strong>
-            <p>Your code. Your workflow. Your space.</p>
-            <span class="promo-version">EARLY ACCESS · V1</span>
-          </div>
-          <div class="sidebar-footer">
-            <span>Leap Platform</span>
-            <span>v1.0.0</span>
-          </div>
-        </div>
-      </aside>
-
-      <main class="main-content" id="mainContent">
-        <section class="page active" id="page-dashboard">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">WORKSPACE / OVERVIEW</div>
-              <h1>Good to see you.</h1>
-              <p class="page-subtitle">Your development workspace, all in one place.</p>
-            </div>
-            <button class="primary-button" data-action="new-repo">+ New repository</button>
-          </div>
-
-          <div class="welcome-panel">
-            <div class="welcome-content">
-              <span class="welcome-tag">YOUR DEVELOPER WORKSPACE</span>
-              <h2>Make something<br><em>worth sharing.</em></h2>
-              <p>Manage projects, track progress, and collaborate with developers.</p>
-              <button class="welcome-button" data-page="repositories">Explore repositories <span>→</span></button>
-            </div>
-            <div class="welcome-decoration">
-              <div class="orbit orbit-one"></div>
-              <div class="orbit orbit-two"></div>
-              <div class="orbit orbit-three"></div>
-              <div class="orbit-core">L</div>
-            </div>
-          </div>
-
-          <div class="stats-grid">
-            <article class="stat-card">
-              <div class="stat-label">Repositories</div>
-              <div class="stat-value" id="dashboardRepos">0</div>
-              <div class="stat-foot">Projects in your workspace</div>
-            </article>
-            <article class="stat-card">
-              <div class="stat-label">Open issues</div>
-              <div class="stat-value" id="dashboardIssues">0</div>
-              <div class="stat-foot">Issues awaiting attention</div>
-            </article>
-            <article class="stat-card">
-              <div class="stat-label">Pull requests</div>
-              <div class="stat-value" id="dashboardPulls">0</div>
-              <div class="stat-foot">Open contributions</div>
-            </article>
-            <article class="stat-card">
-              <div class="stat-label">Stars received</div>
-              <div class="stat-value" id="dashboardStars">0</div>
-              <div class="stat-foot">Across your repositories</div>
-            </article>
-          </div>
-
-          <div class="dashboard-grid">
-            <section class="panel">
-              <div class="panel-heading">
-                <div>
-                  <h3>Recent repositories</h3>
-                  <p>Your latest projects</p>
-                </div>
-                <button class="text-button" data-page="repositories">View all →</button>
-              </div>
-              <div id="recentRepositories" class="repository-list"></div>
-            </section>
-
-            <section class="panel">
-              <div class="panel-heading">
-                <div>
-                  <h3>Quick access</h3>
-                  <p>Jump back into your workflow</p>
-                </div>
-              </div>
-              <div class="quick-links">
-                <button class="quick-link" data-action="new-repo">
-                  <span class="quick-icon">＋</span>
-                  <span><strong>Create repository</strong><small>Start a new project</small></span>
-                  <span class="quick-arrow">→</span>
-                </button>
-                <button class="quick-link" data-page="issues">
-                  <span class="quick-icon">◎</span>
-                  <span><strong>Manage issues</strong><small>Track project tasks</small></span>
-                  <span class="quick-arrow">→</span>
-                </button>
-                <button class="quick-link" data-page="pulls">
-                  <span class="quick-icon">⇄</span>
-                  <span><strong>Review changes</strong><small>Inspect pull requests</small></span>
-                  <span class="quick-arrow">→</span>
-                </button>
-                <button class="quick-link" data-page="explore">
-                  <span class="quick-icon">⌕</span>
-                  <span><strong>Explore projects</strong><small>Discover repositories</small></span>
-                  <span class="quick-arrow">→</span>
-                </button>
-              </div>
-            </section>
-          </div>
-
-          <section class="panel activity-panel">
-            <div class="panel-heading">
-              <div>
-                <h3>Recent activity</h3>
-                <p>Events recorded in this browser</p>
-              </div>
-              <button class="text-button" data-page="activity">View activity →</button>
-            </div>
-            <div id="dashboardActivity" class="activity-list"></div>
-          </section>
-        </section>
-
-        <section class="page" id="page-repositories">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">WORKSPACE / PROJECTS</div>
-              <h1>Repositories</h1>
-              <p class="page-subtitle">Your source code, organized.</p>
-            </div>
-            <button class="primary-button" data-action="new-repo">+ New repository</button>
-          </div>
-
-          <div class="toolbar">
-            <input class="field search-field" id="repoFilter" placeholder="Find a repository...">
-            <select class="field select-field" id="repoSort">
-              <option value="updated">Recently updated</option>
-              <option value="name">Name</option>
-              <option value="stars">Most stars</option>
-            </select>
-            <select class="field select-field" id="repoVisibility">
-              <option value="all">All visibility</option>
-              <option value="public">Public</option>
-              <option value="private">Private</option>
-            </select>
-          </div>
-          <div id="allRepositories" class="repository-list repository-list-full"></div>
-        </section>
-
-        <section class="page" id="page-repository">
-          <div class="repo-detail-heading">
-            <button class="back-button" data-page="repositories">← Repositories</button>
-            <div class="repo-title-row">
-              <div>
-                <div class="eyebrow">REPOSITORY</div>
-                <h1 id="repoDetailName">Repository</h1>
-                <p id="repoDetailDescription" class="page-subtitle"></p>
-              </div>
-              <div class="repo-detail-actions">
-                <button class="secondary-button" id="repoStarButton">☆ Star</button>
-                <button class="secondary-button" id="repoEditButton">Edit</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="repo-tabs">
-            <button class="repo-tab active" data-repotab="code">▤ Code</button>
-            <button class="repo-tab" data-repotab="issues">◎ Issues</button>
-            <button class="repo-tab" data-repotab="pulls">⇄ Pull requests</button>
-            <button class="repo-tab" data-repotab="activity">◷ Activity</button>
-          </div>
-
-          <div id="repoTabContent" class="repo-tab-content"></div>
-        </section>
-
-        <section class="page" id="page-issues">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">COLLABORATION / TRACKING</div>
-              <h1>Issues</h1>
-              <p class="page-subtitle">Track bugs, tasks, and ideas.</p>
-            </div>
-            <button class="primary-button" data-action="new-issue">+ New issue</button>
-          </div>
-          <div class="toolbar">
-            <input class="field search-field" id="issueFilter" placeholder="Search issues...">
-            <select class="field select-field" id="issueStatus">
-              <option value="all">All issues</option>
-              <option value="open">Open</option>
-              <option value="closed">Closed</option>
-            </select>
-          </div>
-          <div id="issuesList" class="panel data-panel"></div>
-        </section>
-
-        <section class="page" id="page-pulls">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">COLLABORATION / CODE REVIEW</div>
-              <h1>Pull requests</h1>
-              <p class="page-subtitle">Propose and review changes.</p>
-            </div>
-            <button class="primary-button" data-action="new-pull">+ New pull request</button>
-          </div>
-          <div class="toolbar">
-            <input class="field search-field" id="pullFilter" placeholder="Search pull requests...">
-            <select class="field select-field" id="pullStatus">
-              <option value="all">All pull requests</option>
-              <option value="open">Open</option>
-              <option value="merged">Merged</option>
-              <option value="closed">Closed</option>
-            </select>
-          </div>
-          <div id="pullsList" class="panel data-panel"></div>
-        </section>
-
-        <section class="page" id="page-discussions">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">COLLABORATION / COMMUNITY</div>
-              <h1>Discussions</h1>
-              <p class="page-subtitle">Ideas and conversations around your projects.</p>
-            </div>
-            <button class="primary-button" data-action="new-discussion">+ New discussion</button>
-          </div>
-          <div id="discussionsList" class="panel data-panel"></div>
-        </section>
-
-        <section class="page" id="page-activity">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">WORKSPACE / HISTORY</div>
-              <h1>Activity</h1>
-              <p class="page-subtitle">A record of your workspace activity.</p>
-            </div>
-          </div>
-          <div id="fullActivity" class="panel activity-list activity-full"></div>
-        </section>
-
-        <section class="page" id="page-explore">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">DISCOVER / COMMUNITY</div>
-              <h1>Explore</h1>
-              <p class="page-subtitle">Discover projects in this Leap demo workspace.</p>
-            </div>
-          </div>
-          <div class="explore-notice">Showing locally available sample projects. A global public repository directory requires a server.</div>
-          <div id="exploreRepositories" class="explore-grid"></div>
-        </section>
-
-        <section class="page" id="page-notifications">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">PERSONAL / INBOX</div>
-              <h1>Notifications</h1>
-              <p class="page-subtitle">Updates from your workspace.</p>
-            </div>
-            <button class="secondary-button" id="markReadButton">Mark all as read</button>
-          </div>
-          <div id="notificationsList" class="panel data-panel"></div>
-        </section>
-
-        <section class="page" id="page-profile">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">PERSONAL / ACCOUNT</div>
-              <h1>Your profile</h1>
-              <p class="page-subtitle">Your public developer identity.</p>
-            </div>
-            <button class="secondary-button" data-action="edit-profile">Edit profile</button>
-          </div>
-          <div class="profile-panel panel">
-            <div class="avatar avatar-profile">R</div>
-            <div class="profile-info">
-              <h2 id="profileName">Rahim Bakhtiar</h2>
-              <p id="profileUsername">@rbakhtiar</p>
-              <p id="profileBio">Developer. Builder. Creator.</p>
-              <div class="profile-meta"><span>⌖ Pakistan</span><span>⌘ Developer</span></div>
-            </div>
-          </div>
-          <div class="stats-grid profile-stats">
-            <article class="stat-card"><div class="stat-label">Repositories</div><div class="stat-value" id="profileRepos">0</div></article>
-            <article class="stat-card"><div class="stat-label">Stars</div><div class="stat-value" id="profileStars">0</div></article>
-            <article class="stat-card"><div class="stat-label">Issues</div><div class="stat-value" id="profileIssues">0</div></article>
-            <article class="stat-card"><div class="stat-label">Pull requests</div><div class="stat-value" id="profilePulls">0</div></article>
-          </div>
-          <section class="panel">
-            <div class="panel-heading"><div><h3>Popular repositories</h3></div></div>
-            <div id="profileRepositories" class="repository-list"></div>
-          </section>
-        </section>
-
-        <section class="page" id="page-settings">
-          <div class="page-heading">
-            <div>
-              <div class="eyebrow">PERSONAL / PREFERENCES</div>
-              <h1>Settings</h1>
-              <p class="page-subtitle">Configure your Leap experience.</p>
-            </div>
-          </div>
-          <div class="settings-layout">
-            <div class="settings-nav">
-              <button class="settings-tab active" data-setting="general">General</button>
-              <button class="settings-tab" data-setting="appearance">Appearance</button>
-              <button class="settings-tab" data-setting="data">Data & privacy</button>
-            </div>
-            <div class="panel settings-content" id="settingsContent"></div>
-          </div>
-        </section>
-
-        <footer class="main-footer">
-          <span class="footer-brand">LEAP</span>
-          <span>A home for your code.</span>
-          <span>Early access · V1.0.0</span>
-        </footer>
-      </main>
-    </div>
+<div class="app">
+<header class="topbar">
+ <div class="logo"><span class="logo-icon">L</span>Leap<em>.</em></div>
+ <div class="search-wrap">
+  <div class="search">
+   <span>⌕</span>
+   <input id="search" placeholder="Search repositories, issues, projects...">
+   <kbd>Ctrl K</kbd>
   </div>
+  <div id="searchResults" class="search-results"></div>
+ </div>
+ <div class="top-right">
+  <button class="icon-button" onclick="go('notifications')">♧</button>
+  <button class="icon-button" onclick="go('settings')">⚙</button>
+  <div class="avatar" id="avatar">R</div>
+ </div>
+</header>
 
-  <div class="modal-backdrop hidden" id="modalBackdrop">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-heading">
-        <div>
-          <div class="eyebrow" id="modalEyebrow">LEAP WORKSPACE</div>
-          <h2 id="modalTitle">Create repository</h2>
-        </div>
-        <button class="icon-button modal-close" id="modalClose" aria-label="Close">×</button>
-      </div>
-      <form id="modalForm">
-        <div id="modalFields"></div>
-        <div class="modal-error hidden" id="modalError"></div>
-        <div class="modal-actions">
-          <button type="button" class="secondary-button" id="modalCancel">Cancel</button>
-          <button type="submit" class="primary-button" id="modalSubmit">Create</button>
-        </div>
-      </form>
-    </div>
+<div class="layout">
+<aside class="sidebar">
+ <div class="side-heading">WORKSPACE</div>
+ <div class="nav active" data-page="dashboard" onclick="go('dashboard')"><span class="nav-icon">◫</span><span class="nav-label">Overview</span></div>
+ <div class="nav" data-page="repositories" onclick="go('repositories')"><span class="nav-icon">▤</span><span class="nav-label">Repositories</span><span class="nav-count" id="repoCount">0</span></div>
+ <div class="nav" data-page="issues" onclick="go('issues')"><span class="nav-icon">◎</span><span class="nav-label">Issues</span><span class="nav-count" id="issueCount">0</span></div>
+ <div class="nav" data-page="pulls" onclick="go('pulls')"><span class="nav-icon">⇄</span><span class="nav-label">Pull requests</span></div>
+
+ <div class="side-heading">DEVELOPMENT</div>
+ <div class="nav" data-page="branches" onclick="go('branches')"><span class="nav-icon">⑂</span><span class="nav-label">Branches</span></div>
+ <div class="nav" data-page="commits" onclick="go('commits')"><span class="nav-icon">◉</span><span class="nav-label">Commits</span></div>
+ <div class="nav" data-page="snippets" onclick="go('snippets')"><span class="nav-icon">⌘</span><span class="nav-label">Snippets</span></div>
+ <div class="nav" data-page="activity" onclick="go('activity')"><span class="nav-icon">⌁</span><span class="nav-label">Activity</span></div>
+ <div class="nav" data-page="explore" onclick="go('explore')"><span class="nav-icon">✳</span><span class="nav-label">Explore</span></div>
+
+ <div class="side-heading">ACCOUNT</div>
+ <div class="nav" data-page="profile" onclick="go('profile')"><span class="nav-icon">♙</span><span class="nav-label">Profile</span></div>
+ <div class="nav" data-page="settings" onclick="go('settings')"><span class="nav-icon">⚙</span><span class="nav-label">Settings</span></div>
+
+ <div class="sidebar-footer">
+  <div class="sub">LEAP WORKSPACE</div>
+  <p class="sub">Build beyond limits.</p>
+ </div>
+</aside>
+
+<main class="main"><div class="content" id="content"></div></main>
+</div>
+</div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+ <div class="modal" id="modal"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* ============================================
+   01 — APPLICATION DATA
+============================================ */
+
+const KEY="leap_2_workspace";
+
+const seed={
+ schema:2,
+ user:{
+  name:"Rahim Bakhtiar",
+  username:"rbakhtiar",
+  bio:"Building software and exploring the future.",
+  website:"",
+  location:"",
+  email:""
+ },
+ repositories:[
+  {
+   id:"r1",name:"Leap",description:"A developer collaboration platform.",
+   language:"JavaScript",visibility:"Public",
+   stars:12,forks:3,watchers:5,
+   created:Date.now()-86400000*10,updated:Date.now(),
+   branch:"main",
+   branches:["main","development"],
+   readme:"# Leap\n\nA developer platform built for builders.",
+   files:[
+    {path:"README.md",type:"file",content:"# Leap"},
+    {path:"index.html",type:"file",content:"<!-- Leap project -->"},
+    {path:"src",type:"folder",content:""}
+   ]
+  },
+  {
+   id:"r2",name:"XYZ-OS",description:"Experimental operating system.",
+   language:"JavaScript",visibility:"Public",
+   stars:8,forks:2,watchers:3,
+   created:Date.now()-86400000*20,updated:Date.now()-86400000,
+   branch:"main",branches:["main"],
+   readme:"# XYZ OS",
+   files:[{path:"index.html",type:"file",content:""}]
+  },
+  {
+   id:"r3",name:"Clamme",description:"A quieter way to create.",
+   language:"HTML",visibility:"Public",
+   stars:15,forks:4,watchers:8,
+   created:Date.now()-86400000*30,updated:Date.now()-86400000*2,
+   branch:"main",branches:["main"],
+   readme:"# Clamme",
+   files:[{path:"index.html",type:"file",content:""}]
+  }
+ ],
+ issues:[],
+ pulls:[],
+ commits:[],
+ snippets:[],
+ activities:[],
+ notifications:[],
+ graph:Array.from({length:182},()=>0),
+ starred:[]
+};
+
+function clone(value){
+ return JSON.parse(JSON.stringify(value));
+}
+
+function load(){
+ try{
+  const data=JSON.parse(localStorage.getItem(KEY));
+  if(data&&data.schema===2&&data.user&&Array.isArray(data.repositories)){
+   return {...clone(seed),...data};
+  }
+ }catch(error){}
+ return clone(seed);
+}
+
+let db=load();
+let page="dashboard";
+let activeRepo=null;
+let repoTab="code";
+let editorFile=null;
+let searchTimer=null;
+
+function persist(){
+ try{
+  localStorage.setItem(KEY,JSON.stringify(db));
+  updateCounters();
+  return true;
+ }catch(error){
+  notify("Storage limit reached. Export your workspace.");
+  return false;
+ }
+}
+
+function uid(prefix="item"){
+ return prefix+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,9);
+}
+
+function esc(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
+}
+
+function fmtDate(value){
+ return new Date(value).toLocaleDateString(undefined,{
+  month:"short",day:"numeric",year:"numeric"
+ });
+}
+
+function ago(value){
+ const d=Math.floor((Date.now()-value)/86400000);
+ if(d===0)return "Today";
+ if(d===1)return "Yesterday";
+ return d+" days ago";
+}
+
+function notify(message){
+ const el=document.getElementById("toast");
+ el.textContent=message;
+ el.classList.add("show");
+ clearTimeout(notify.timer);
+ notify.timer=setTimeout(()=>el.classList.remove("show"),2600);
+}
+
+function updateCounters(){
+ document.getElementById("repoCount").textContent=db.repositories.length;
+ document.getElementById("issueCount").textContent=db.issues.filter(x=>x.status==="Open").length;
+ document.getElementById("avatar").textContent=db.user.name.charAt(0).toUpperCase();
+}
+
+function record(action,detail){
+ db.activities.unshift({id:uid("activity"),action,detail,time:Date.now()});
+ db.activities=db.activities.slice(0,150);
+ persist();
+}
+
+function addNotification(text){
+ db.notifications.unshift({id:uid("notification"),text,time:Date.now(),read:false});
+ persist();
+}
+
+/* ============================================
+   02 — COMPONENT HELPERS
+============================================ */
+
+function btn(label,action,primary=false){
+ return `<button class="btn ${primary?"primary":""}" onclick="${action}">${label}</button>`;
+}
+
+function header(title,subtitle,actions=""){
+ return `<div class="heading">
+  <div><h1>${title}</h1><div class="sub">${subtitle}</div></div>
+  <div class="actions">${actions}</div>
+ </div>`;
+}
+
+function empty(icon,title,description,action=""){
+ return `<div class="empty">
+  <div class="empty-icon">${icon}</div>
+  <h3>${title}</h3><p>${description}</p>${action}
+ </div>`;
+}
+
+function card(title,body){
+ return `<section class="card">
+  <div class="card-head"><h2>${title}</h2></div>${body}
+ </section>`;
+}
+
+function findRepo(id){
+ return db.repositories.find(r=>r.id===id);
+}
+
+function repositoryCard(r){
+ return `<div class="repo">
+  <div style="display:flex;justify-content:space-between;gap:12px">
+   <a class="repo-title" href="#" onclick="openRepo('${r.id}');return false">
+    ▤ ${esc(r.name)}
+   </a>
+   <span class="badge">${esc(r.visibility)}</span>
   </div>
+  <div class="repo-desc">${esc(r.description||"No description")}</div>
+  <div class="repo-meta">
+   <span><i class="dot"></i>${esc(r.language)}</span>
+   <span>☆ ${r.stars}</span>
+   <span>⑂ ${r.forks}</span>
+   <span>${r.watchers} watchers</span>
+   <span>Updated ${ago(r.updated)}</span>
+  </div>
+ </div>`;
+}
 
-  <div class="toast-container" id="toastContainer"></div>
+function activityItem(a){
+ return `<div class="activity">
+  <div class="activity-icon">⌁</div>
+  <div>
+   <div class="activity-text"><b>${esc(a.action)}</b> ${esc(a.detail)}</div>
+   <div class="row-sub">${ago(a.time)}</div>
+  </div>
+ </div>`;
+}
 
-  <script src="app.js"></script>
+/* ============================================
+   03 — ROUTER
+============================================ */
+
+function go(next){
+ page=next;
+ document.querySelectorAll(".nav").forEach(el=>{
+  el.classList.toggle("active",el.dataset.page===next);
+ });
+ render();
+ window.scrollTo(0,0);
+}
+
+function render(){
+ const routes={
+  dashboard:dashboard,
+  repositories:repositories,
+  repository:repository,
+  issues:issues,
+  pulls:pulls,
+  branches:branches,
+  commits:commits,
+  snippets:snippets,
+  activity:activity,
+  explore:explore,
+  profile:profile,
+  settings:settings,
+  notifications:notifications
+ };
+ const fn=routes[page]||dashboard;
+ document.getElementById("content").innerHTML=fn();
+ updateCounters();
+}
+
+/* ============================================
+   04 — DASHBOARD
+============================================ */
+
+function dashboard(){
+ const stars=db.repositories.reduce((n,r)=>n+r.stars,0);
+ const forks=db.repositories.reduce((n,r)=>n+r.forks,0);
+ const opened=db.issues.filter(i=>i.status==="Open").length;
+
+ return `
+ ${header("Overview","Welcome back, "+esc(db.user.name)+".",
+ btn("+ New repository","newRepository()",true))}
+ <div class="grid stats">
+  <div class="card"><div class="stat-label">Repositories</div><div class="stat-value">${db.repositories.length}</div><div class="stat-detail">Projects in workspace</div></div>
+  <div class="card"><div class="stat-label">Stars</div><div class="stat-value">${stars}</div><div class="stat-detail">Across all repositories</div></div>
+  <div class="card"><div class="stat-label">Forks</div><div class="stat-value">${forks}</div><div class="stat-detail">Recorded locally</div></div>
+  <div class="card"><div class="stat-label">Open issues</div><div class="stat-value">${opened}</div><div class="stat-detail">Awaiting attention</div></div>
+ </div>
+ <div class="card" style="margin-bottom:15px">
+  <div class="card-head"><h2>Contribution overview</h2><span class="badge">26 weeks</span></div>
+  <div class="graph">${db.graph.map(n=>`<div class="graph-cell" data-level="${n}"></div>`).join("")}</div>
+  <div class="row-sub" style="margin-top:12px">Contribution visualization. Local activity is not a verified GitHub contribution count.</div>
+ </div>
+ <div class="grid columns">
+  ${card("Your repositories",
+   db.repositories.length?db.repositories.slice(0,6).map(repositoryCard).join(""):
+   empty("▤","No repositories","Create your first project."))}
+  ${card("Recent activity",
+   db.activities.length?db.activities.slice(0,8).map(activityItem).join(""):
+   empty("⌁","No activity","Your activity will appear here."))}
+ </div>`;
+}
+
+/* ============================================
+   05 — REPOSITORY MANAGEMENT
+============================================ */
+
+function repositories(){
+ return `
+ ${header("Repositories","Your source-code projects.",
+ btn("+ New repository","newRepository()",true))}
+ <div class="card">
+  <div class="card-head"><h2>${db.repositories.length} repositories</h2><span class="badge">Workspace</span></div>
+  ${db.repositories.length?db.repositories.map(repositoryCard).join(""):empty("▤","No repositories","Start a new project.")}
+ </div>`;
+}
+
+function newRepository(){
+ modal(`
+ <h2>Create repository</h2>
+ <form onsubmit="createRepository(event)">
+  <div class="field"><label>Name</label><input name="name" required maxlength="80" placeholder="my-project"></div>
+  <div class="field"><label>Description</label><textarea name="description" maxlength="500" placeholder="Describe your project"></textarea></div>
+  <div class="field"><label>Language</label>
+   <select name="language">
+    ${["JavaScript","TypeScript","HTML","CSS","Python","Rust","C","C++","Java","Go","Ruby","Other"].map(x=>`<option>${x}</option>`).join("")}
+   </select>
+  </div>
+  <div class="field"><label>Visibility</label><select name="visibility"><option>Public</option><option>Private</option></select></div>
+  <div class="field"><label>Initialize README</label><select name="readme"><option value="yes">Yes</option><option value="no">No</option></select></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Create repository</button></div>
+ </form>`);
+}
+
+function createRepository(event){
+ event.preventDefault();
+ const f=new FormData(event.target);
+ const name=String(f.get("name")).trim();
+ if(!name)return;
+ if(db.repositories.some(r=>r.name.toLowerCase()===name.toLowerCase())){
+  notify("Repository already exists.");return;
+ }
+ const readme=f.get("readme")==="yes";
+ const repo={
+  id:uid("repo"),name,
+  description:String(f.get("description")),
+  language:String(f.get("language")),
+  visibility:String(f.get("visibility")),
+  stars:0,forks:0,watchers:0,
+  created:Date.now(),updated:Date.now(),
+  branch:"main",branches:["main"],
+  readme:readme?"# "+name+"\n\nProject description.":"",
+  files:readme?[{path:"README.md",type:"file",content:"# "+name}]:[]
+ };
+ db.repositories.unshift(repo);
+ record("Created repository",name);
+ closeModal();go("repositories");notify("Repository created.");
+}
+
+/* ============================================
+   06 — REPOSITORY WORKSPACE
+============================================ */
+
+function openRepo(id){
+ activeRepo=id;
+ page="repository";
+ repoTab="code";
+ render();
+}
+
+function repository(){
+ const r=findRepo(activeRepo);
+ if(!r){go("repositories");return "";}
+ return `
+ ${header(esc(r.name),esc(db.user.username)+"/"+esc(r.name),
+ `<button class="btn" onclick="starRepo('${r.id}')">☆ Star ${r.stars}</button>
+ <button class="btn" onclick="forkRepo('${r.id}')">⑂ Fork</button>
+ <button class="btn danger" onclick="deleteRepo('${r.id}')">Delete</button>`)}
+ <div class="tabs">
+  ${["code","readme","issues","branches","settings"].map(t=>`
+   <div class="tab ${repoTab===t?"active":""}" onclick="setRepoTab('${t}')">${t[0].toUpperCase()+t.slice(1)}</div>
+  `).join("")}
+ </div>
+ <div id="repoWorkspace">${repoContent(r)}</div>`;
+}
+
+function setRepoTab(tab){
+ repoTab=tab;
+ render();
+}
+
+function repoContent(r){
+ if(repoTab==="code")return repoCode(r);
+ if(repoTab==="readme")return repoReadme(r);
+ if(repoTab==="issues")return repoIssues(r);
+ if(repoTab==="branches")return repoBranches(r);
+ if(repoTab==="settings")return repoSettings(r);
+ return "";
+}
+
+function repoCode(r){
+ return `
+ <div class="card">
+  <div class="card-head">
+   <h2>Files</h2>
+   <div class="actions">
+    <button class="btn small" onclick="newFile('${r.id}')">+ File</button>
+    <button class="btn small" onclick="newFolder('${r.id}')">+ Folder</button>
+   </div>
+  </div>
+  <div class="row"><div class="row-title">⑂ ${esc(r.branch)}</div><span class="badge">Current branch</span></div>
+  ${r.files.length?r.files.map((f,i)=>`
+   <div class="file-row" onclick="${f.type==="folder"?"":"editFile('"+r.id+"',"+i+")"}">
+    <span>${f.type==="folder"?"📁":"▤"}</span>
+    <span>${esc(f.path)}</span>
+    <span class="row-sub" style="margin-left:auto">${f.type}</span>
+   </div>`).join(""):empty("▤","Empty repository","Add your first file.")}
+  <div style="margin-top:20px">
+   <h3>Clone URL preview</h3>
+   <pre>https://leap.example/${esc(db.user.username)}/${esc(r.name)}.git</pre>
+   <p class="sub">Illustrative URL. A real clone endpoint requires Git server infrastructure.</p>
+  </div>
+ </div>`;
+}
+
+function newFile(repoId){
+ modal(`
+ <h2>Create file</h2>
+ <form onsubmit="createFile(event,'${repoId}')">
+  <div class="field"><label>File path</label><input name="path" placeholder="src/app.js" required></div>
+  <div class="field"><label>Initial content</label><textarea name="content" placeholder="// Start building"></textarea></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Create file</button></div>
+ </form>`);
+}
+
+function createFile(event,repoId){
+ event.preventDefault();
+ const r=findRepo(repoId);
+ const f=new FormData(event.target);
+ const path=String(f.get("path")).trim().replace(/^\/+/,"");
+ if(!r||!path||path.includes("..")||path.endsWith("/")){notify("Invalid file path.");return;}
+ if(r.files.some(x=>x.path===path)){notify("File already exists.");return;}
+ r.files.push({path,type:"file",content:String(f.get("content"))});
+ r.updated=Date.now();
+ record("Added file to",r.name);
+ closeModal();render();notify("File created.");
+}
+
+function newFolder(repoId){
+ modal(`
+ <h2>Create folder</h2>
+ <form onsubmit="createFolder(event,'${repoId}')">
+  <div class="field"><label>Folder path</label><input name="path" placeholder="src/components" required></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Create folder</button></div>
+ </form>`);
+}
+
+function createFolder(event,repoId){
+ event.preventDefault();
+ const r=findRepo(repoId);
+ const path=String(new FormData(event.target).get("path")).trim().replace(/^\/+|\/+$/g,"");
+ if(!r||!path||path.includes("..")){notify("Invalid folder path.");return;}
+ if(r.files.some(f=>f.path===path)){notify("Already exists.");return;}
+ r.files.push({path,type:"folder",content:""});
+ persist();closeModal();render();notify("Folder created.");
+}
+
+function editFile(repoId,index){
+ const r=findRepo(repoId);
+ const f=r?.files[index];
+ if(!f||f.type!=="file")return;
+ editorFile={repoId,index};
+ modal(`
+ <h2>${esc(f.path)}</h2>
+ <textarea id="fileEditor" class="editor">${esc(f.content)}</textarea>
+ <div class="modal-actions">
+  <button class="btn danger" onclick="removeFile()">Delete file</button>
+  <button class="btn" onclick="closeModal()">Cancel</button>
+  <button class="btn primary" onclick="saveFile()">Save changes</button>
+ </div>`);
+}
+
+function saveFile(){
+ if(!editorFile)return;
+ const r=findRepo(editorFile.repoId);
+ if(!r)return;
+ const f=r.files[editorFile.index];
+ f.content=document.getElementById("fileEditor").value;
+ r.updated=Date.now();
+ record("Edited file in",r.name);
+ editorFile=null;closeModal();render();notify("File saved.");
+}
+
+function removeFile(){
+ if(!editorFile)return;
+ const r=findRepo(editorFile.repoId);
+ if(!r)return;
+ if(!confirm("Delete this file?"))return;
+ r.files.splice(editorFile.index,1);
+ editorFile=null;persist();closeModal();render();notify("File deleted.");
+}
+
+function repoReadme(r){
+ return `
+ <div class="card">
+  <div class="card-head"><h2>README.md</h2><button class="btn primary small" onclick="saveReadme('${r.id}')">Save README</button></div>
+  <textarea id="readmeEditor" class="editor">${esc(r.readme)}</textarea>
+ </div>`;
+}
+
+function saveReadme(id){
+ const r=findRepo(id);
+ r.readme=document.getElementById("readmeEditor").value;
+ r.updated=Date.now();
+ persist();record("Updated README in",r.name);notify("README saved.");
+}
+
+function repoIssues(r){
+ const items=db.issues.filter(i=>i.repoId===r.id);
+ return `<div class="card">
+  <div class="card-head"><h2>Repository issues</h2><button class="btn primary small" onclick="newIssue('${r.id}')">New issue</button></div>
+  ${items.length?items.map(issueCard).join(""):empty("◎","No issues","This project has no issues.")}
+ </div>`;
+}
+
+function repoBranches(r){
+ return `<div class="card">
+  <div class="card-head"><h2>Branches</h2><button class="btn primary small" onclick="newBranch('${r.id}')">New branch</button></div>
+  ${r.branches.map(b=>`
+   <div class="row">
+    <div><b>${esc(b)}</b>${b===r.branch?'<span class="pill"> CURRENT</span>':""}</div>
+    <button class="btn small" onclick="checkout('${r.id}','${esc(b)}')">Switch</button>
+   </div>`).join("")}
+ </div>`;
+}
+
+function repoSettings(r){
+ return `<div class="card">
+  <h2>Repository settings</h2>
+  <div class="field" style="margin-top:20px"><label>Name</label><input id="editRepoName" value="${esc(r.name)}"></div>
+  <div class="field"><label>Description</label><textarea id="editRepoDescription">${esc(r.description)}</textarea></div>
+  <div class="field"><label>Visibility</label><select id="editRepoVisibility"><option ${r.visibility==="Public"?"selected":""}>Public</option><option ${r.visibility==="Private"?"selected":""}>Private</option></select></div>
+  <button class="btn primary" onclick="saveRepoSettings('${r.id}')">Save settings</button>
+ </div>`;
+}
+
+function saveRepoSettings(id){
+ const r=findRepo(id);
+ const name=document.getElementById("editRepoName").value.trim();
+ if(!name)return;
+ if(db.repositories.some(x=>x.id!==id&&x.name.toLowerCase()===name.toLowerCase())){
+  notify("Repository name already exists.");return;
+ }
+ r.name=name;
+ r.description=document.getElementById("editRepoDescription").value;
+ r.visibility=document.getElementById("editRepoVisibility").value;
+ r.updated=Date.now();
+ persist();render();notify("Settings updated.");
+}
+
+function deleteRepo(id){
+ const r=findRepo(id);
+ if(!r||!confirm("Delete "+r.name+" from this workspace?"))return;
+ db.repositories=db.repositories.filter(x=>x.id!==id);
+ db.issues=db.issues.filter(x=>x.repoId!==id);
+ db.pulls=db.pulls.filter(x=>x.repoId!==id);
+ record("Deleted repository",r.name);
+ go("repositories");
+}
+
+function starRepo(id){
+ const r=findRepo(id);
+ if(!r)return;
+ r.stars++;
+ db.starred.push(id);
+ persist();record("Starred",r.name);render();notify("Star recorded locally.");
+}
+
+function forkRepo(id){
+ const r=findRepo(id);
+ if(!r)return;
+ const fork=clone(r);
+ fork.id=uid("repo");
+ fork.name=r.name+"-fork";
+ fork.stars=0;fork.forks=0;fork.watchers=0;
+ fork.created=Date.now();fork.updated=Date.now();
+ fork.branches=[...r.branches];
+ db.repositories.unshift(fork);
+ r.forks++;
+ record("Forked repository",r.name);
+ render();notify("Local copy created.");
+}
+
+/* ============================================
+   07 — BRANCHES
+============================================ */
+
+function branches(){
+ return `
+ ${header("Branches","Manage your repository branch records.")}
+ <div class="card">
+  ${db.repositories.map(r=>`
+   <div class="repo">
+    <h3>${esc(r.name)}</h3>
+    <div class="sub" style="margin:7px 0">Current: ${esc(r.branch)}</div>
+    ${r.branches.map(b=>`
+     <div class="row">
+      <span>⑂ ${esc(b)}</span>
+      <button class="btn small" onclick="checkout('${r.id}','${esc(b)}')">Switch</button>
+     </div>`).join("")}
+    <button class="btn small" style="margin-top:10px" onclick="newBranch('${r.id}')">+ Branch</button>
+   </div>`).join("")}
+ </div>`;
+}
+
+function newBranch(id){
+ modal(`
+ <h2>Create branch</h2>
+ <form onsubmit="createBranch(event,'${id}')">
+  <div class="field"><label>Branch name</label><input name="name" placeholder="feature/new-feature" required></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Create</button></div>
+ </form>`);
+}
+
+function createBranch(event,id){
+ event.preventDefault();
+ const r=findRepo(id);
+ const name=String(new FormData(event.target).get("name")).trim();
+ if(!r||!name||name.includes(" ")||name.startsWith("/")||name.includes("..")){notify("Invalid branch name.");return;}
+ if(r.branches.includes(name)){notify("Branch already exists.");return;}
+ r.branches.push(name);
+ persist();record("Created branch in",r.name);
+ closeModal();render();notify("Branch created.");
+}
+
+function checkout(id,name){
+ const r=findRepo(id);
+ if(!r||!r.branches.includes(name))return;
+ r.branch=name;
+ persist();record("Switched branch in",r.name);
+ render();notify("Current branch: "+name);
+}
+
+/* ============================================
+   08 — COMMITS
+============================================ */
+
+function commits(){
+ return `
+ ${header("Commits","Local workspace change records.")}
+ <div class="card">
+  <div class="card-head"><h2>Commit history</h2><span class="badge">${db.commits.length} records</span></div>
+  ${db.commits.length?db.commits.map(commitCard).join(""):empty("◉","No commits","Create a local change record from a repository.")}
+ </div>`;
+}
+
+function commitCard(c){
+ return `<div class="row">
+  <div class="row-main">
+   <div class="row-title">${esc(c.message)}</div>
+   <div class="row-sub">${esc(c.repoName)} · ${esc(c.branch)} · ${fmtDate(c.time)}</div>
+  </div>
+  <code class="sub">${esc(c.hash)}</code>
+ </div>`;
+}
+
+function createCommit(id){
+ const r=findRepo(id);
+ if(!r)return;
+ modal(`
+ <h2>Record a commit</h2>
+ <form onsubmit="saveCommit(event,'${id}')">
+  <div class="field"><label>Commit message</label><input name="message" required maxlength="150" placeholder="Add new feature"></div>
+  <div class="field"><label>Description</label><textarea name="description"></textarea></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Record commit</button></div>
+ </form>`);
+}
+
+function saveCommit(event,id){
+ event.preventDefault();
+ const r=findRepo(id);
+ const f=new FormData(event.target);
+ const message=String(f.get("message")).trim();
+ const hash=Array.from({length:7},()=>Math.floor(Math.random()*16).toString(16)).join("");
+ db.commits.unshift({
+  id:uid("commit"),repoId:id,repoName:r.name,
+  message,description:String(f.get("description")),
+  branch:r.branch,hash,time:Date.now()
+ });
+ r.updated=Date.now();
+ const index=Math.floor(Math.random()*db.graph.length);
+ db.graph[index]=Math.min(4,db.graph[index]+1);
+ record("Recorded commit in",r.name);
+ closeModal();render();notify("Local commit record created.");
+}
+
+/* ============================================
+   09 — ISSUES
+============================================ */
+
+function issueCard(i){
+ return `<div class="row">
+  <div class="row-main">
+   <div class="row-title">${esc(i.title)}</div>
+   <div class="row-sub">#${i.number} · ${esc(i.repoName)} · ${fmtDate(i.created)}</div>
+   <div class="row-sub">${esc(i.description)}</div>
+  </div>
+  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+   <span class="badge">${esc(i.priority)}</span>
+   <button class="btn small" onclick="toggleIssue('${i.id}')">${i.status==="Open"?"Close":"Reopen"}</button>
+  </div>
+ </div>`;
+}
+
+function issues(){
+ return `
+ ${header("Issues","Track bugs, tasks and improvements.")}
+ <div class="card">
+  <div class="card-head"><h2>All issues</h2><span class="badge">${db.issues.length}</span></div>
+  ${db.issues.length?db.issues.map(issueCard).join(""):empty("◎","No issues","Create an issue from a repository.")}
+ </div>`;
+}
+
+function newIssue(repoId){
+ modal(`
+ <h2>New issue</h2>
+ <form onsubmit="createIssue(event,'${repoId}')">
+  <div class="field"><label>Title</label><input name="title" required maxlength="150"></div>
+  <div class="field"><label>Description</label><textarea name="description"></textarea></div>
+  <div class="field"><label>Priority</label><select name="priority"><option>Normal</option><option>High</option><option>Low</option></select></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Create issue</button></div>
+ </form>`);
+}
+
+function createIssue(event,repoId){
+ event.preventDefault();
+ const r=findRepo(repoId);
+ if(!r)return;
+ const f=new FormData(event.target);
+ const list=db.issues.filter(i=>i.repoId===repoId);
+ db.issues.unshift({
+  id:uid("issue"),repoId,repoName:r.name,
+  number:list.length+1,
+  title:String(f.get("title")),
+  description:String(f.get("description")),
+  priority:String(f.get("priority")),
+  status:"Open",created:Date.now()
+ });
+ record("Opened issue in",r.name);
+ addNotification("New issue created in "+r.name);
+ closeModal();render();notify("Issue created.");
+}
+
+function toggleIssue(id){
+ const i=db.issues.find(x=>x.id===id);
+ if(!i)return;
+ i.status=i.status==="Open"?"Closed":"Open";
+ persist();render();notify("Issue status updated.");
+}
+
+/* ============================================
+   10 — PULL REQUESTS
+============================================ */
+
+function pulls(){
+ return `
+ ${header("Pull requests","Review proposed changes.",
+ btn("+ New pull request","newPull()",true))}
+ <div class="card">
+  ${db.pulls.length?db.pulls.map(p=>`
+   <div class="row">
+    <div class="row-main">
+     <div class="row-title">${esc(p.title)}</div>
+     <div class="row-sub">#${p.number} · ${esc(p.repoName)} · ${fmtDate(p.created)}</div>
+     <div class="row-sub">${esc(p.description)}</div>
+    </div>
+    <span class="badge">${esc(p.status)}</span>
+   </div>`).join(""):empty("⇄","No pull requests","Create a proposed change.")}
+ </div>`;
+}
+
+function newPull(){
+ if(!db.repositories.length){notify("Create a repository first.");return;}
+ modal(`
+ <h2>New pull request</h2>
+ <form onsubmit="createPull(event)">
+  <div class="field"><label>Repository</label>
+   <select name="repo">${db.repositories.map(r=>`<option value="${r.id}">${esc(r.name)}</option>`).join("")}</select>
+  </div>
+  <div class="field"><label>Title</label><input name="title" required></div>
+  <div class="field"><label>Description</label><textarea name="description"></textarea></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Create</button></div>
+ </form>`);
+}
+
+function createPull(event){
+ event.preventDefault();
+ const f=new FormData(event.target);
+ const r=findRepo(String(f.get("repo")));
+ if(!r)return;
+ db.pulls.unshift({
+  id:uid("pull"),repoId:r.id,repoName:r.name,
+  number:db.pulls.filter(p=>p.repoId===r.id).length+1,
+  title:String(f.get("title")),
+  description:String(f.get("description")),
+  status:"Open",created:Date.now()
+ });
+ record("Created pull request in",r.name);
+ closeModal();render();notify("Pull request created.");
+}
+
+/* ============================================
+   11 — SNIPPETS
+============================================ */
+
+function snippets(){
+ return `
+ ${header("Snippets","Save reusable pieces of code.",
+ btn("+ New snippet","newSnippet()",true))}
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+  ${db.snippets.map(s=>`
+   <div class="card">
+    <h3>${esc(s.title)}</h3>
+    <p class="sub">${esc(s.language)}</p>
+    <pre>${esc(s.code)}</pre>
+    <div class="actions">
+     <button class="btn small" onclick="copySnippet('${s.id}')">Copy</button>
+     <button class="btn small danger" onclick="deleteSnippet('${s.id}')">Delete</button>
+    </div>
+   </div>`).join("")}
+ </div>
+ ${db.snippets.length?"":empty("⌘","No snippets","Create your first code snippet.",
+ btn("Create snippet","newSnippet()",true))}`;
+}
+
+function newSnippet(){
+ modal(`
+ <h2>Create snippet</h2>
+ <form onsubmit="createSnippet(event)">
+  <div class="field"><label>Title</label><input name="title" required></div>
+  <div class="field"><label>Language</label>
+   <select name="language">${["JavaScript","TypeScript","HTML","CSS","Python","Rust","C++","Java"].map(x=>`<option>${x}</option>`).join("")}</select>
+  </div>
+  <div class="field"><label>Code</label><textarea name="code" required style="min-height:180px;font-family:monospace"></textarea></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Save</button></div>
+ </form>`);
+}
+
+function createSnippet(event){
+ event.preventDefault();
+ const f=new FormData(event.target);
+ db.snippets.unshift({
+  id:uid("snippet"),title:String(f.get("title")),
+  language:String(f.get("language")),code:String(f.get("code"))
+ });
+ persist();closeModal();render();notify("Snippet saved.");
+}
+
+async function copySnippet(id){
+ const s=db.snippets.find(x=>x.id===id);
+ if(!s)return;
+ try{await navigator.clipboard.writeText(s.code);notify("Copied.");}
+ catch(e){notify("Clipboard permission unavailable.");}
+}
+
+function deleteSnippet(id){
+ if(!confirm("Delete this snippet?"))return;
+ db.snippets=db.snippets.filter(x=>x.id!==id);
+ persist();render();notify("Snippet deleted.");
+}
+
+/* ============================================
+   12 — ACTIVITY
+============================================ */
+
+function activity(){
+ return `
+ ${header("Activity","Your workspace event history.")}
+ <div class="card">
+  ${db.activities.length?db.activities.map(activityItem).join(""):empty("⌁","No activity yet","Your actions will appear here.")}
+ </div>`;
+}
+
+/* ============================================
+   13 — EXPLORE
+============================================ */
+
+function explore(){
+ return `
+ ${header("Explore","Discover your workspace projects.")}
+ <div class="card">
+  <div class="card-head"><h2>Public repositories</h2></div>
+  ${db.repositories.filter(r=>r.visibility==="Public").map(repositoryCard).join("")}
+ </div>
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:15px">
+  <div class="card"><h3>Source control</h3><p class="sub">Repository and branch management.</p></div>
+  <div class="card"><h3>Collaboration</h3><p class="sub">Issues and pull request records.</p></div>
+  <div class="card"><h3>Developer tools</h3><p class="sub">Code editor and snippets.</p></div>
+ </div>`;
+}
+
+/* ============================================
+   14 — PROFILE
+============================================ */
+
+function profile(){
+ const u=db.user;
+ const stars=db.repositories.reduce((n,r)=>n+r.stars,0);
+ return `
+ ${header("Developer profile","Your Leap identity.",btn("Edit profile","editProfile()"))}
+ <div class="card">
+  <div class="profile">
+   <div class="avatar" style="width:65px;height:65px;font-size:25px">${esc(u.name[0])}</div>
+   <div><h2>${esc(u.name)}</h2><div class="sub">@${esc(u.username)}</div><p class="sub">${esc(u.bio)}</p></div>
+  </div>
+  <div class="grid stats" style="margin-top:25px">
+   <div><div class="stat-label">Repositories</div><div class="stat-value">${db.repositories.length}</div></div>
+   <div><div class="stat-label">Stars</div><div class="stat-value">${stars}</div></div>
+   <div><div class="stat-label">Commits</div><div class="stat-value">${db.commits.length}</div></div>
+   <div><div class="stat-label">Issues</div><div class="stat-value">${db.issues.length}</div></div>
+  </div>
+  <div class="row"><span>Website</span><span>${u.website?esc(u.website):"Not specified"}</span></div>
+  <div class="row"><span>Location</span><span>${u.location?esc(u.location):"Not specified"}</span></div>
+ </div>
+ <div class="card" style="margin-top:15px">
+  <h2>Public repositories</h2>
+  ${db.repositories.filter(r=>r.visibility==="Public").map(repositoryCard).join("")}
+ </div>`;
+}
+
+function editProfile(){
+ modal(`
+ <h2>Edit profile</h2>
+ <form onsubmit="saveProfile(event)">
+  <div class="field"><label>Name</label><input name="name" required value="${esc(db.user.name)}"></div>
+  <div class="field"><label>Username</label><input name="username" required value="${esc(db.user.username)}"></div>
+  <div class="field"><label>Bio</label><textarea name="bio">${esc(db.user.bio)}</textarea></div>
+  <div class="field"><label>Website</label><input name="website" value="${esc(db.user.website)}"></div>
+  <div class="field"><label>Location</label><input name="location" value="${esc(db.user.location)}"></div>
+  <div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Save profile</button></div>
+ </form>`);
+}
+
+function saveProfile(event){
+ event.preventDefault();
+ const f=new FormData(event.target);
+ db.user={
+  ...db.user,
+  name:String(f.get("name")),
+  username:String(f.get("username")),
+  bio:String(f.get("bio")),
+  website:String(f.get("website")),
+  location:String(f.get("location"))
+ };
+ persist();closeModal();render();notify("Profile updated.");
+}
+
+/* ============================================
+   15 — NOTIFICATIONS
+============================================ */
+
+function notifications(){
+ return `
+ ${header("Notifications","Workspace announcements and updates.",
+ btn("Mark all read","markAllRead()"))}
+ <div class="card">
+  ${db.notifications.length?db.notifications.map(n=>`
+   <div class="row">
+    <div><div class="row-title">${esc(n.text)}</div><div class="row-sub">${ago(n.time)}</div></div>
+    <span class="badge">${n.read?"Read":"New"}</span>
+   </div>`).join(""):empty("♧","All caught up","No notifications.")}
+ </div>`;
+}
+
+function markAllRead(){
+ db.notifications.forEach(n=>n.read=true);
+ persist();render();notify("Notifications marked as read.");
+}
+
+/* ============================================
+   16 — SETTINGS AND BACKUPS
+============================================ */
+
+function settings(){
+ return `
+ ${header("Settings","Manage your Leap workspace.")}
+ <div class="grid columns">
+  <div class="card">
+   <h2>Workspace information</h2>
+   <div class="row"><span>Version</span><span class="badge">2.0</span></div>
+   <div class="row"><span>Storage</span><span class="badge">Browser local storage</span></div>
+   <div class="row"><span>Authentication</span><span class="badge">Local profile only</span></div>
+   <div class="row"><span>Git server</span><span class="badge">Not connected</span></div>
+  </div>
+  <div class="card">
+   <h2>Data management</h2>
+   <p class="sub">Export or import your workspace.</p>
+   <div style="display:grid;gap:10px;margin-top:18px">
+    <button class="btn" onclick="exportWorkspace()">↓ Export JSON</button>
+    <button class="btn" onclick="document.getElementById('importInput').click()">↑ Import JSON</button>
+    <input hidden id="importInput" type="file" accept=".json,application/json" onchange="importWorkspace(event)">
+    <button class="btn danger" onclick="resetWorkspace()">Reset workspace</button>
+   </div>
+  </div>
+ </div>
+ <div class="card" style="margin-top:15px">
+  <h2>Production integrations</h2>
+  ${[
+   ["Native Git storage","Git server required"],
+   ["Google authentication","OAuth and backend required"],
+   ["Microsoft authentication","OAuth and backend required"],
+   ["Multi-user synchronization","Database and API required"],
+   ["Real pull requests","Git object and merge infrastructure required"],
+   ["CI/CD pipelines","Build runners required"],
+   ["Webhooks","Backend required"],
+   ["SSH Git access","SSH server required"]
+  ].map(x=>`<div class="row"><b>${x[0]}</b><span class="badge">${x[1]}</span></div>`).join("")}
+ </div>`;
+}
+
+function exportWorkspace(){
+ const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="leap-workspace-backup.json";a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ notify("Workspace exported.");
+}
+
+async function importWorkspace(event){
+ const file=event.target.files[0];
+ if(!file)return;
+ try{
+  const data=JSON.parse(await file.text());
+  if(data.schema!==2||!data.user||!Array.isArray(data.repositories)){
+   throw new Error("Invalid format");
+  }
+  if(!confirm("Replace current workspace data?"))return;
+  db=data;
+  persist();go("dashboard");notify("Workspace imported.");
+ }catch(error){notify("Invalid backup file.");}
+ event.target.value="";
+}
+
+function resetWorkspace(){
+ if(!confirm("Delete all local workspace data and restore the starter workspace?"))return;
+ db=clone(seed);
+ persist();go("dashboard");notify("Workspace reset.");
+}
+
+/* ============================================
+   17 — GLOBAL SEARCH
+============================================ */
+
+const search=document.getElementById("search");
+const results=document.getElementById("searchResults");
+
+search.addEventListener("input",()=>{
+ clearTimeout(searchTimer);
+ searchTimer=setTimeout(searchWorkspace,100);
+});
+
+function searchWorkspace(){
+ const q=search.value.toLowerCase().trim();
+ if(!q){results.classList.remove("show");return;}
+ const items=[];
+
+ db.repositories.forEach(r=>{
+  if((r.name+" "+r.description).toLowerCase().includes(q)){
+   items.push({name:r.name,type:"Repository",action:()=>openRepo(r.id)});
+  }
+ });
+ db.issues.forEach(i=>{
+  if((i.title+" "+i.description).toLowerCase().includes(q)){
+   items.push({name:i.title,type:"Issue",action:()=>go("issues")});
+  }
+ });
+ db.snippets.forEach(s=>{
+  if((s.title+" "+s.language).toLowerCase().includes(q)){
+   items.push({name:s.title,type:"Snippet",action:()=>go("snippets")});
+  }
+ });
+ const limited=items.slice(0,12);
+ window.leapSearchActions=limited.map(x=>x.action);
+ results.innerHTML=limited.length?limited.map((x,i)=>`
+  <div class="search-item" onclick="leapSearchActions[${i}]();document.getElementById('searchResults').classList.remove('show')">
+   <b>${esc(x.name)}</b><div class="sub">${x.type}</div>
+  </div>`).join(""):empty("⌕","No results","Try another search.");
+ results.classList.add("show");
+}
+
+document.addEventListener("click",e=>{
+ if(!e.target.closest(".search-wrap"))results.classList.remove("show");
+});
+
+document.addEventListener("keydown",e=>{
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){
+  e.preventDefault();search.focus();
+ }
+ if(e.key==="Escape")closeModal();
+});
+
+/* ============================================
+   18 — MODAL ENGINE
+============================================ */
+
+function modal(content){
+ document.getElementById("modal").innerHTML=content;
+ document.getElementById("overlay").classList.add("show");
+}
+
+function closeModal(){
+ document.getElementById("overlay").classList.remove("show");
+ editorFile=null;
+}
+
+/* ============================================
+   19 — INITIALIZATION
+============================================ */
+
+function initialize(){
+ updateCounters();
+ render();
+ persist();
+}
+
+initialize();
+
+</script>
 </body>
 </html>
